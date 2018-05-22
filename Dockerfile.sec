@@ -1,0 +1,12 @@
+FROM java:8-jre-alpine
+
+MAINTAINER wangsike<wsk@acegear.com>
+
+COPY app.jar app.jar
+COPY skywalking-agent.zip skywalking-agent.zip
+COPY run.sh run.sh
+RUN chmod a+x run.sh
+
+RUN unzip skywalking-agent.zip
+
+CMD sh run.sh

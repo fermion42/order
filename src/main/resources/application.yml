@@ -1,0 +1,83 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_IP_PORT:mongodb://localhost:27017/test}
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    username: guest
+    password: guest
+  datasource:
+    url: jdbc:mysql://localhost:3306/acegear_orderpay?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+    test-on-borrow: true
+    validation-query: SELECT 1
+    dbcp2:
+      test-on-borrow: true
+      validation-query: SELECT 1
+    type: org.apache.commons.dbcp2.BasicDataSource
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+pingxx:
+  test_key: sk_test_qfbDu1Xnz1qLfLS0GGjTyP40
+  live_key: sk_live_z9afn9Wj1un1fzXHiTP8K8OS
+  appId: app_rXvnr5LiHSCC0ePe
+  env: ${PINGXX_ENV:test}
+horizon:
+  ons:
+    expire: ${ONS_EXPIRE:60}
+    topic: ${ONS_TOPIC:ag-test}
+    accessKey: ${ONS_KEY:LTAIHeeqSZMoR79I}
+    secretKey: ${ONS_SECRET:lpLh0e9Zo3BXy0SpGfyUrDbPVajpGs}
+    pid: ${ONS_PID:PID-ag-test}
+    cid: ${ONS_CID:CID-order-ag-test}
+    addr: ${ONS_ADDR:http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet}
+  server: ${HORIZON_SERVER:http://localhost:8004}
+  kong:
+    server: ${KONG_SERVER:http://localhost:8001}
+    name: ${KONG_NAME:horizon-app}
+    enable: ${KONG_ENABLE:true}
+    cors: ${KONG_CORS:https://wx-event.acegear.cn}
+  cache:
+    redis:
+      url: ${REDIS_URL:localhost}
+      auth: ${REDIS_AUTH:}
+  domain:
+    order:
+      expireTime: 3600000
+    rabbit:
+      delay:
+        exchange: delay.exchange.60m
+        queue: delay.queue.60m
+        time: 3600000
+      exchange: horizon.domain
+      queue: horizon.domain.order.queue
+      routingKey: horizon.domain.#
+    event:
+      idKey: eventIdKey
+    product:
+      idKey: productIdKey
+server:
+  port: 8004
+initClubEventEnd: ${ClubEventEnd:false}
+---
+
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+horizon:
+  ons:
+    topic: ${ONS_TOPIC:timing}
+    accessKey: ${ONS_KEY:LTAIHeeqSZMoR79I}
+    secretKey: ${ONS_SECRET:lpLh0e9Zo3BXy0SpGfyUrDbPVajpGs}
+    pid: ${ONS_PID:PID-timing}
+    cid: ${ONS_CID:CID-order-server}
+    addr: ${ONS_ADDR:http://onsaddr-internet.aliyun.com:8080/rocketmq/nsaddr4client-internet}
